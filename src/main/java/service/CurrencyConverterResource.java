@@ -21,8 +21,7 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 	@Path("{moedaOrigem}/{moedaDestino}/{valor}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String teste(@PathParam("moedaOrigem") String moedaOrigem,@PathParam("moedaDestino") String moedaDestino, @PathParam("valor") Double valor) {
-		String json = new JSONObject().put("moedaOrigen", moedaOrigem).put("valor", valor).put("moedaDestino", moedaDestino).toString();
-		
+		String json = new JSONObject().put("moedaOrigen", moedaOrigem).put("valor", valor).put("moedaDestino", moedaDestino).toString();		
 		return json;
 	}
 	
@@ -32,5 +31,6 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 	public String teste2(@PathParam("moedaOrigem") String moedaOrigem, @PathParam("valor") Double valor) {
 		return new JSONObject().put("moedaOrigem", moedaOrigem).put("valor", valor).toString();
 	}
+	
 	
 }
