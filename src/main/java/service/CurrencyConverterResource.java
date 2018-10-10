@@ -50,12 +50,13 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 	@Produces(MediaType.APPLICATION_JSON)
 	public String currencyAToB(@PathParam("moedaOrigem") String from, @PathParam("moedaDestino") String to, @PathParam("valor") Double value){
 		Double result = convert(requestAPI(), from, to);
+		String json = "";
 		if (result == null) {
 			//TODO: Disponibilizar tela de erro
-			return Response.status(Status.BAD_REQUEST).toString();
+			return json = new JSONObject().put("status", false).toString();
 		}
 		
-		String json = new JSONObject().put("moedaOrigem", from).put("moedaDestino", to).put("valor", (value * result)).toString();
+		json = new JSONObject().put("status", true).put("moedaOrigem", from).put("moedaDestino", to).put("valor", (value * result)).toString();
 		
 		return json;
 	}
