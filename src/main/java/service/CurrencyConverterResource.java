@@ -209,9 +209,12 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 			
 		if (validateCurrency(from) == false) {
 			//TODO Disponibilizar tela informando moeda inválida
+			
+			// ACHO QUE MATEI ESSE TODO POR TER TROCADO O INPUT DA MOEDA PRA UM SELECT
 			return null;
 		}else if (validateCurrency(to) == false) {
 			//TODO Disponibilizar tela informando moeda inválida
+			// ACHO QUE MATEI ESSE TODO POR TER TROCADO O INPUT DA MOEDA PRA UM SELECT
 			return null;
 		}else {
 			//Divisão para transformar o valor recuperado da API em 1 unidade da moeda de origem
