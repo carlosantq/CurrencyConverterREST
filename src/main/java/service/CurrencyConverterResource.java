@@ -51,7 +51,7 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 	public String currencyAToB(@PathParam("moedaOrigem") String from, @PathParam("moedaDestino") String to, @PathParam("valor") Double value){
 		Double result = convert(requestAPI(), from, to);
 		if (result == null) {
-			//return "Not Available";
+			//TODO: Disponibilizar tela de erro
 			return Response.status(Status.BAD_REQUEST).toString();
 		}
 		
@@ -66,7 +66,7 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 	public String currencyAToAll(@PathParam("moedaOrigem") String from, @PathParam("valor") Double value) throws RemoteException {
 		JSONObject apiJSON = requestAPI();
 		
-		//Tratar exceção do caso NULL na conversão
+		//TODO: Tratar exceção do caso NULL na conversão
 		JSONArray jsonArray = new JSONArray();
 		jsonArray.put(new JSONObject().put("moedaOrigem", from).put("moedaDestino", "DKK").put("valor", (value * convert(apiJSON, from, "DKK"))));
 		jsonArray.put(new JSONObject().put("moedaOrigem", from).put("moedaDestino", "NOK").put("valor", (value * convert(apiJSON, from, "NOK"))));
@@ -134,7 +134,7 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 				System.out.println("API reached its peak of access.");
 				System.out.println("Error: " + codigoErro);
 				System.out.println("Message: " + infoErro);
-				//Retornar um JSON com essas informações e erro 500
+				//TODO: Retornar um JSON com essas informações e erro 500
 				System.exit(0);
 			}
 			
@@ -196,8 +196,10 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 		Double to2 = 1.0;
 			
 		if (validateCurrency(from) == false) {
+			//TODO Disponibilizar tela informando moeda inválida
 			return null;
 		}else if (validateCurrency(to) == false) {
+			//TODO Disponibilizar tela informando moeda inválida
 			return null;
 		}else {
 			//Divisão para transformar o valor recuperado da API em 1 unidade da moeda de origem
