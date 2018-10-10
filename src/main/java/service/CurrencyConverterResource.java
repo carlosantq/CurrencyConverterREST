@@ -65,16 +65,16 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 	@Produces(MediaType.APPLICATION_JSON)
 	public String currencyAToAll(@PathParam("moedaOrigem") String from, @PathParam("valor") Double value) throws RemoteException {
 		JSONObject apiJSON = null;
-		
+		JSONArray jsonArray = new JSONArray();
 		try{
 			apiJSON = requestAPI();
 		} catch (NullPointerException npe) {
-			return new JSONObject().put("status", false).put("error", "ERRO 500").toString();
+			return jsonArray.put(new JSONObject().put("status", false).put("error", "ERRO 500")).toString();
 		}
 		
 		
 		//TODO: Tratar exceção do caso NULL na conversão
-		JSONArray jsonArray = new JSONArray();
+		
 		jsonArray.put(new JSONObject().put("status", true));
 		jsonArray.put(new JSONObject().put("moedaOrigem", from).put("moedaDestino", "DKK").put("valor", (value * convert(apiJSON, from, "DKK"))));
 		jsonArray.put(new JSONObject().put("moedaOrigem", from).put("moedaDestino", "NOK").put("valor", (value * convert(apiJSON, from, "NOK"))));
