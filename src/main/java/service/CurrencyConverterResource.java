@@ -64,10 +64,18 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 	@Path("{moedaOrigem}/{valor}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String currencyAToAll(@PathParam("moedaOrigem") String from, @PathParam("valor") Double value) throws RemoteException {
-		JSONObject apiJSON = requestAPI();
+		JSONObject apiJSON = null;
+		
+		try{
+			apiJSON = requestAPI();
+		} catch (NullPointerException npe) {
+			return new JSONObject().put("status", false).put("error", "ERRO 500").toString();
+		}
+		
 		
 		//TODO: Tratar exceção do caso NULL na conversão
 		JSONArray jsonArray = new JSONArray();
+		jsonArray.put(new JSONObject().put("status", true));
 		jsonArray.put(new JSONObject().put("moedaOrigem", from).put("moedaDestino", "DKK").put("valor", (value * convert(apiJSON, from, "DKK"))));
 		jsonArray.put(new JSONObject().put("moedaOrigem", from).put("moedaDestino", "NOK").put("valor", (value * convert(apiJSON, from, "NOK"))));
 		jsonArray.put(new JSONObject().put("moedaOrigem", from).put("moedaDestino", "SEK").put("valor", (value * convert(apiJSON, from, "SEK"))));
@@ -135,7 +143,11 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 				System.out.println("Error: " + codigoErro);
 				System.out.println("Message: " + infoErro);
 				//TODO: Retornar um JSON com essas informações e erro 500
-				System.exit(0);
+				JSONObject errorJson = new JSONObject();
+				return errorJson.put("reason", "API reached its peak of access.")
+						.put("Error: ", codigoErro)
+						.put("Message: ", infoErro)
+						.put("status", false);
 			}
 			
 			response.close();
