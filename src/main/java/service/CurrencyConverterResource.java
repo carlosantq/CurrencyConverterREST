@@ -57,10 +57,11 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 	@Produces(MediaType.APPLICATION_JSON)
 	public String currencyAToB(@PathParam("moedaOrigem") String from, @PathParam("moedaDestino") String to, @PathParam("valor") Double value){
 		JSONObject apiJSON = requestAPI();
-		System.out.println(apiJSON);
 		Double result = convert(apiJSON, from, to);
-		if (result == null) {
-			return new JSONObject().put("status", false).toString();
+		if (result == null && !apiJSON.getBoolean("success")) {
+			return new JSONObject().put("status", false).put("error", apiJSON.getString("error")).toString();
+		}else if (result == null && apiJSON.getBoolean("success")) {
+			return new JSONObject().put("status", false).put("error", "Currency not found").toString();
 		}
 		
 		String json = new JSONObject().put("status", true).put("moedaOrigem", from).put("moedaDestino", to).put("valor", (value * result)).toString();
@@ -87,11 +88,11 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 		}
 		
 		if(!validateCurrency(from)) {
-			return new JSONObject().put("status", false).toString();
+			return new JSONObject().put("status", false).put("error", "Currency not found").toString();
 		}
 		
 		if(!apiJSON.getBoolean("success")) {
-			return new JSONObject().put("status", false).toString();
+			return new JSONObject().put("status", false).put("error", apiJSON.getString("error")).toString();
 		}
 		
 		jsonArray.put(new JSONObject().put("status", true));
@@ -154,17 +155,11 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 			boolean status = exchangeRates.getBoolean("success");
 
 			if (!status) {
-				int codigoErro = exchangeRates.getJSONObject("error").getInt("code");
 
 				String infoErro = exchangeRates.getJSONObject("error").getString("info");
 
-				System.out.println("API reached its peak of access.");
-				System.out.println("Error: " + codigoErro);
-				System.out.println("Message: " + infoErro);
 				JSONObject errorJson = new JSONObject();
-				return errorJson.put("success", false)
-						.put("Error: ", codigoErro)
-						.put("Message: ", infoErro);
+				return errorJson.put("success", false).put("error", infoErro);
 			}
 			
 			response.close();
