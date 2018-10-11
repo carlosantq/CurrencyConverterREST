@@ -49,14 +49,14 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 	@Path("{moedaOrigem}/{moedaDestino}/{valor}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String currencyAToB(@PathParam("moedaOrigem") String from, @PathParam("moedaDestino") String to, @PathParam("valor") Double value){
-		Double result = convert(requestAPI(), from, to);
-		String json = "";
+		JSONObject apiJSON = requestAPI();
+		System.out.println(apiJSON);
+		Double result = convert(apiJSON, from, to);
 		if (result == null) {
-			//TODO: Disponibilizar tela de erro
-			return json = new JSONObject().put("status", false).toString();
+			return new JSONObject().put("status", false).toString();
 		}
 		
-		json = new JSONObject().put("status", true).put("moedaOrigem", from).put("moedaDestino", to).put("valor", (value * result)).toString();
+		String json = new JSONObject().put("status", true).put("moedaOrigem", from).put("moedaDestino", to).put("valor", (value * result)).toString();
 		
 		return json;
 	}
@@ -73,8 +73,13 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 			return jsonArray.put(new JSONObject().put("status", false).put("error", "ERRO 500")).toString();
 		}
 		
+		if(!validateCurrency(from)) {
+			return new JSONObject().put("status", false).toString();
+		}
 		
-		//TODO: Tratar exceção do caso NULL na conversão
+		if(!apiJSON.getBoolean("success")) {
+			return new JSONObject().put("status", false).toString();
+		}
 		
 		jsonArray.put(new JSONObject().put("status", true));
 		jsonArray.put(new JSONObject().put("moedaOrigem", from).put("moedaDestino", "DKK").put("valor", (value * convert(apiJSON, from, "DKK"))));
@@ -136,19 +141,17 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 			boolean status = exchangeRates.getBoolean("success");
 
 			if (!status) {
-				String codigoErro = exchangeRates.getJSONObject("error").getString("code");
+				int codigoErro = exchangeRates.getJSONObject("error").getInt("code");
 
 				String infoErro = exchangeRates.getJSONObject("error").getString("info");
 
 				System.out.println("API reached its peak of access.");
 				System.out.println("Error: " + codigoErro);
 				System.out.println("Message: " + infoErro);
-				//TODO: Retornar um JSON com essas informações e erro 500
 				JSONObject errorJson = new JSONObject();
-				return errorJson.put("reason", "API reached its peak of access.")
+				return errorJson.put("success", false)
 						.put("Error: ", codigoErro)
-						.put("Message: ", infoErro)
-						.put("status", false);
+						.put("Message: ", infoErro);
 			}
 			
 			response.close();
@@ -207,15 +210,13 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 		//Variáveis auxiliares
 		Double from2 = 1.0;
 		Double to2 = 1.0;
-			
-		if (validateCurrency(from) == false) {
-			//TODO Disponibilizar tela informando moeda inválida
-			
-			// ACHO QUE MATEI ESSE TODO POR TER TROCADO O INPUT DA MOEDA PRA UM SELECT
+		boolean status = exchangeRates.getBoolean("success");
+		
+		if (!status) {
+			return null;
+		}if (validateCurrency(from) == false) {
 			return null;
 		}else if (validateCurrency(to) == false) {
-			//TODO Disponibilizar tela informando moeda inválida
-			// ACHO QUE MATEI ESSE TODO POR TER TROCADO O INPUT DA MOEDA PRA UM SELECT
 			return null;
 		}else {
 			//Divisão para transformar o valor recuperado da API em 1 unidade da moeda de origem
