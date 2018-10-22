@@ -71,10 +71,20 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 		}
 		
 		
+		
+		String[] currencies = { "DKK", "NOK", "SEK", "CZK", "GBP", "TRY", "INR",
+				"IDR", "PKR", "THB", "USD", "AUD", "CAD", "SGD", "HKD", "TWD", 
+				"NZD", "EUR", "HUF", "CHF", "JPY", "ILS", "CLP", "PHP", "MXN", 
+				"ZAR", "BRL", "MYR", "RUB", "KRW", "CNY", "PLN" };
+		jsonArray.put(new JSONObject().put("status", true));
+		for (int i = 0; i < currencies.length; i++) {
+			jsonArray.put(new JSONObject().put("moedaOrigen", from).put("moedaDestino", currencies[i]).put("valor", (value * convert(apiJSON, from, currencies[i]))));
+		}
+		
 		//TODO: Tratar exceção do caso NULL na conversão
 		
-		jsonArray.put(new JSONObject().put("status", true));
-		jsonArray.put(new JSONObject().put("moedaOrigem", from).put("moedaDestino", "DKK").put("valor", (value * convert(apiJSON, from, "DKK"))));
+		
+		/*jsonArray.put(new JSONObject().put("moedaOrigem", from).put("moedaDestino", "DKK").put("valor", (value * convert(apiJSON, from, "DKK"))));
 		jsonArray.put(new JSONObject().put("moedaOrigem", from).put("moedaDestino", "NOK").put("valor", (value * convert(apiJSON, from, "NOK"))));
 		jsonArray.put(new JSONObject().put("moedaOrigem", from).put("moedaDestino", "SEK").put("valor", (value * convert(apiJSON, from, "SEK"))));
 		jsonArray.put(new JSONObject().put("moedaOrigem", from).put("moedaDestino", "CZK").put("valor", (value * convert(apiJSON, from, "CZK"))));
@@ -106,7 +116,7 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 		jsonArray.put(new JSONObject().put("moedaOrigem", from).put("moedaDestino", "KRW").put("valor", (value * convert(apiJSON, from, "KRW"))));
 		jsonArray.put(new JSONObject().put("moedaOrigem", from).put("moedaDestino", "CNY").put("valor", (value * convert(apiJSON, from, "CNY"))));
 		jsonArray.put(new JSONObject().put("moedaOrigem", from).put("moedaDestino", "PLN").put("valor", (value * convert(apiJSON, from, "PLN"))));
-		
+		*/
 		return jsonArray.toString();
 		
 	}
