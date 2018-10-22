@@ -31,9 +31,6 @@ public class CurrencyConverterResource implements CurrencyConverterInterface{
 	//Atributos utilizados no acesso da API externa
 	public static final String ACCESS_KEY = "7f7012ebf6b30f1cab604e8a4f0737fa";
 	public static final String BASE_URL = "http://apilayer.net/api/";
-	public static final String FROM = "&from=";
-	public static final String TO = "&to=";
-	public static final String AMOUNT = "&amount=1";
 	public static final String ENDPOINT = "live";
 	public static final String CONVERT = "convert";
 	public static final String STATIC_DOLAR = "USD";
